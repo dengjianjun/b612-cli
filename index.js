@@ -39,6 +39,7 @@ program
         spinner.fail('项目模板下载失败');
       } else {
         spinner.succeed('项目模板下载成功');
+        var author = require('git-user-name')();
         //命令行答询
         inquirer.prompt([{
             type: 'input',
@@ -50,19 +51,19 @@ program
             type: 'input',
             name: 'description',
             message: '请输入项目简介',
-            default: ''
+            default: 'This is a vue activity project.'
           },
           {
             type: 'input',
             name: 'author',
             message: '请输入作者名称',
-            default: ''
+            default: author
           },
           {
             type: 'input',
             name: 'mail',
             message: '请输入作者邮箱',
-            default: ''
+            default: `${author}@yiruikecorp.com`
           }
         ]).then(answers => {
           const files = ['package.json', 'README.md'];
