@@ -1,84 +1,26 @@
 #!/usr/bin/env node
+/**
+ * @Desc: the entry of the project
+ * @Date: 2019-02-21
+ */
 
 const program = require('commander'); //设计命令行
-const download = require('download-git-repo'); //github仓库下载
 const inquirer = require('inquirer'); //命令行答询
 const handlebars = require('handlebars'); //修改字符
-const ora = require('ora'); //命令行中加载状态标识
 const chalk = require('chalk'); //命令行输出字符颜色
 const logSymbols = require('log-symbols'); //命令行输出符号
 const fs = require('fs');
-// 可用模板,目前只有一个，后续有需要再加
-const templates = {
-  'default': {
-    url: 'http://10.35.33.29:9999/dengjianjun/activityTemplate',
-    downloadUrl: 'direct:http://10.35.33.29:9999/dengjianjun/activityTemplate.git',
-    description: '默认h5活动页模板'
-  }
-}
+const file = require('./lib/file');
 
-
-program.usage('init [h5-template]')
-  .version('0.1.0'); // -V|--version时输出版本号0.1.0
+program.usage('init <projectName> [templateName]')
+  .version('1.0.0'); // -V|--version时输出版本号1.0.0
 
 // b612 init <project> [template]
 program
   .command('init <project> [template]')
   .description('初始化项目模板')
   .action((projectName, templateName = 'default') => {
-    let {
-      downloadUrl
-    } = templates[templateName];
-    //下载模板项目，下载墙loading提示
-    const spinner = ora('正在下载模板...').start();
-    //第一个参数是模板仓库地址，第二个参数是创建的项目目录名，第三个参数是clone
-    download(downloadUrl, projectName, {
-      clone: true
-    }, err => {
-      if (err) {
-        spinner.fail('项目模板下载失败');
-      } else {
-        spinner.succeed('项目模板下载成功');
-        var author = require('git-user-name')();
-        //命令行答询
-        inquirer.prompt([{
-            type: 'input',
-            name: 'name',
-            message: '请输入项目名称',
-            default: projectName
-          },
-          {
-            type: 'input',
-            name: 'description',
-            message: '请输入项目简介',
-            default: 'This is a vue activity project.'
-          },
-          {
-            type: 'input',
-            name: 'author',
-            message: '请输入作者名称',
-            default: author
-          },
-          {
-            type: 'input',
-            name: 'mail',
-            message: '请输入作者邮箱',
-            default: `${author}@yiruikecorp.com`
-          }
-        ]).then(answers => {
-          const files = ['package.json', 'README.md'];
-          files.forEach(file => {
-            //根据命令行答询结果修改对应文件
-            const filePath = `${projectName}/${file}`;
-            const packsgeContent = fs.readFileSync(filePath, 'utf8');
-            const packageResult = handlebars.compile(packsgeContent)(answers);
-            fs.writeFileSync(filePath, packageResult);
-          });
-          //用chalk和log-symbols改变命令行输出样式
-          console.log(logSymbols.success, chalk.green('模板项目文件准备成功'));
-        })
-      }
-    })
+    main(projectName,templateName);
   })
 
 // b612 list
@@ -101,6 +43,59 @@ function help() {
   }
 }
 help();
+
+/**
+ * main
+ */
+async function main(projectName,templateName) {
+    await file.generate(projectName,templateName);
+    prompt(projectName)
+}
+
+/**
+ * 处理输入
+ */
+async function prompt(projectName){
+  const author = require('git-user-name')();
+  const promptList = [
+    {
+      type: 'input',
+      name: 'name',
+      message: '请输入项目名称',
+      default: projectName
+    },
+    {
+      type: 'input',
+      name: 'description',
+      message: '请输入项目简介',
+      default: 'This is a vue activity project.'
+    },
+    {
+      type: 'input',
+      name: 'author',
+      message: '请输入作者名称',
+      default: author
+    },
+    {
+      type: 'input',
+      name: 'mail',
+      message: '请输入作者邮箱',
+      default: `${author}@yiruikecorp.com`
+    }
+  ]
+  //命令行答询
+  const answers = await inquirer.prompt(promptList)
+  const files = ['package.json', 'README.md'];
+  files.forEach(file => {
+    //根据命令行答询结果修改对应文件
+    const filePath = `${projectName}/${file}`;
+    const packsgeContent = fs.readFileSync(filePath, 'utf8');
+    const packageResult = handlebars.compile(packsgeContent)(answers);
+    fs.writeFileSync(filePath, packageResult);
+  });
+  //用chalk和log-symbols改变命令行输出样式
+  console.log(logSymbols.success, chalk.green('模板项目文件准备成功'));
+}
 
 // error on unknown commands
 program.on('command:*', function () {

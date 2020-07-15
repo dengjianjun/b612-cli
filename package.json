@@ -4,7 +4,12 @@
   "description": "b612 h5活动页脚手架工具",
   "main": "index.js",
   "license": "MIT",
-  "keywords": [],
+  "keywords": [
+    "b612",
+    "b612-cli",
+    "脚手架"
+  ],
+  "author": "dengjianjun@yiruikecorp.com",
   "repository": {
     "type": "git",
     "url": "http://10.35.33.29:9999/dengjianjun/b612-cli.git"
@@ -24,6 +29,7 @@
     "handlebars": "^4.1.0",
     "inquirer": "^6.2.2",
     "log-symbols": "^2.2.0",
-    "ora": "^3.1.0"
+    "ora": "^3.1.0",
+    "try-to-catch": "^3.0.0"
   }
 }
