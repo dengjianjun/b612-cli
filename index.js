@@ -11,16 +11,17 @@ const chalk = require('chalk'); //命令行输出字符颜色
 const logSymbols = require('log-symbols'); //命令行输出符号
 const fs = require('fs');
 const file = require('./lib/file');
+const templates = require('./lib/templates');
 
 program.usage('init <projectName> [templateName]')
   .version('1.0.0'); // -V|--version时输出版本号1.0.0
 
 // b612 init <project> [template]
 program
-  .command('init <project> [template]')
+  .command('init <projectName> [templateName]')
   .description('初始化项目模板')
   .action((projectName, templateName = 'default') => {
-    main(projectName,templateName);
+    main(projectName, templateName);
   })
 
 // b612 list
@@ -28,9 +29,12 @@ program
   .command('list')
   .description('查看所有可用模板')
   .action(() => {
-    console.log(`
-            default   默认h5活动页模板
-        `)
+    let log = '\n'
+    for (let key in templates) {
+      const template = templates[key]
+      log += `\t${key}    ${template.description}\n`
+    }
+    console.log(log)
   })
 
 /**
@@ -42,20 +46,21 @@ function help() {
     return program.help();
   }
 }
+
 help();
 
 /**
  * main
  */
-async function main(projectName,templateName) {
-    await file.generate(projectName,templateName);
-    prompt(projectName)
+async function main(projectName, templateName) {
+  await file.generate(projectName, templateName);
+  prompt(projectName)
 }
 
 /**
  * 处理输入
  */
-async function prompt(projectName){
+async function prompt(projectName) {
   const author = require('git-user-name')();
   const promptList = [
     {
