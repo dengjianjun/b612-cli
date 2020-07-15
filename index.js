@@ -62,6 +62,7 @@ async function main(projectName, templateName) {
  */
 async function prompt(projectName) {
   const author = require('git-user-name')();
+  const repository = `http://10.35.33.29:9999/${author}/${projectName}.git`
   const promptList = [
     {
       type: 'input',
@@ -86,6 +87,12 @@ async function prompt(projectName) {
       name: 'mail',
       message: '请输入作者邮箱',
       default: `${author}@yiruikecorp.com`
+    },
+    {
+      type: 'input',
+      name: 'repository',
+      message: '请输入git仓库地址',
+      default: repository
     }
   ]
   //命令行答询
@@ -100,6 +107,20 @@ async function prompt(projectName) {
   });
   //用chalk和log-symbols改变命令行输出样式
   console.log(logSymbols.success, chalk.green('模板项目文件准备成功'));
+  initGit(projectName,answers.repository || '')
+}
+
+function initGit(projectName,repository){
+  const process = require('child_process');
+  let cmd = `cd ${projectName} && git init`;
+  if (repository) {
+    cmd += ` && git remote add origin ${repository}`
+  }
+  process.exec(cmd, function(error, stdout, stderr) {
+    error && console.log("error:"+error);
+    // console.log("stdout:"+stdout);
+    // console.log("stderr:"+stderr);
+  });
 }
 
 // error on unknown commands
