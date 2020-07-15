@@ -1,5 +1,5 @@
 {
-  "name": "b612-cli",
+  "name": "@b612/cli",
   "version": "1.0.0",
   "description": "b612 h5活动页脚手架工具",
   "main": "index.js",
