@@ -1,7 +1,7 @@
 ## b612-cli
 ##### [b612-cli](http://10.35.33.29:9999/dengjianjun/b612-cli)是帮助你快速创建生成h5活动项目的脚手架工具
 ### Installation
-1. `git clone http://10.35.33.29:9999/dengjianjun/b612-cli.git`
+1. `git clone`
 2. `npm i`
 3. `npm link`
 
