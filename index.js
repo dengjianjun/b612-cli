@@ -66,12 +66,6 @@ async function prompt(projectName) {
   const promptList = [
     {
       type: 'input',
-      name: 'name',
-      message: '请输入项目名称',
-      default: projectName
-    },
-    {
-      type: 'input',
       name: 'description',
       message: '请输入项目简介',
       default: 'This is a vue activity project.'
@@ -97,6 +91,7 @@ async function prompt(projectName) {
   ]
   //命令行答询
   const answers = await inquirer.prompt(promptList)
+  answers.name = projectName
   const files = ['package.json', 'README.md'];
   files.forEach(file => {
     //根据命令行答询结果修改对应文件
