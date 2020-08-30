@@ -14,7 +14,7 @@ const file = require('./lib/file');
 const templates = require('./lib/templates');
 
 program.usage('init <projectName> [templateName]')
-  .version('1.0.0'); // -V|--version时输出版本号1.0.0
+  .version('1.1.1'); // -V|--version时输出版本号1.0.0
 
 // b612 init <project> [template]
 program

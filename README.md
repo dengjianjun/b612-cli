@@ -11,7 +11,8 @@ b612 init my-project default
 ```
 1. 初始化项目是第一项`my-project`是项目名称。
 2. 第二项default是模板名称，可选，默认使用`default`模板。
-3. 目前只做了一个模板，后续再添加。
+3. 模板配置文件在`/lib/templates.js`文件中
+4. 详细使用见文档[https://tower.im/teams/668337/repository_documents/44461/](https://tower.im/teams/668337/repository_documents/44461/)
 
 ##### 初始化项目完成以后
 ```
@@ -26,4 +27,7 @@ npm start //运行项目
 `npm run build`
 
 ### Version
+- `v1.1.1`添加composite合成图片活动页模版
+- `v1.1.0`添加swiper-video活动页模版
+- `v1.0.1`添加swiper活动页模版
 - `v1.0.0`实现基本构建功能
